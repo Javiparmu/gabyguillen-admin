@@ -5,6 +5,7 @@ import AdminDashboard from '../components/admin-dashboard';
 const DashboardPage = async () => {
     const data = await fetch(baseUrl + '/api/paintings', {
         method: 'GET',
+        cache: 'no-store',
     })
 
     const paintings: Painting[] = await data.json();

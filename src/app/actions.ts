@@ -1,24 +1,24 @@
 'use server';
 
-import { getFileBuffer } from "@/libs/file";
-import { base64ToFile, getQRCode, getSectionIdFromTitle, getUrlFromTitle } from "@/libs/qr";
+import { getQRCode, getSectionIdFromTitle, getUrlFromTitle } from "@/libs/qr";
 import { baseFileUrl, defaultParams, s3Client } from "@/libs/s3Client";
 import { Painting } from "@/types";
-import { baseUrl } from "@/utils/constants";
+import { adminPassword, adminUsername, baseUrl, jwtSecret } from "@/utils/constants";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { cookies } from 'next/headers'
+import { SignJWT } from 'jose'
 
 const schema = z.object({
     title: z.string(),
     description: z.string(),
     collection: z.string(),
-    price: z.string(),
-    imageFile: z.unknown(),
+    price: z.number(),
+    image_url: z.string(),
+    qr: z.string(),
 });
 
 export async function create(formData: FormData) {
-    const painting = schema.parse(Object.fromEntries(formData));
     const title = formData.get('title') as string;
     const description = formData.get('description') as string;
     const collection = formData.get('collection') as string;
@@ -55,8 +55,7 @@ export async function create(formData: FormData) {
 
     await s3Client.send(qrCommand);
 
-    const createdPainting: Partial<Painting> = {
-        ...painting,
+    const painting: Partial<Painting> = {
         title,
         description,
         collection,
@@ -65,6 +64,8 @@ export async function create(formData: FormData) {
         qr: baseFileUrl + qrFileName,
     };
 
+    const createdPainting = schema.parse(painting);
+
     await fetch(baseUrl + '/api/paintings', {
         method: 'POST',
         headers: {
@@ -72,8 +73,6 @@ export async function create(formData: FormData) {
         },
         body: JSON.stringify(createdPainting),
     });
-
-    revalidatePath('/dashboard');
 };
 
 export async function update(formData: FormData) {
@@ -112,6 +111,24 @@ export async function update(formData: FormData) {
         },
         body: JSON.stringify(updatedPainting),
     });
+}
 
-    revalidatePath('/dashboard');
+export async function login(formData: FormData) {
+    const username = formData.get('username') as string;
+    const password = formData.get('password') as string;
+
+    if (username === adminUsername && password === adminPassword) {
+        const sessionToken = await new SignJWT({ username, password }).setExpirationTime('30d').setProtectedHeader({ alg: 'HS256' }).setIssuedAt().sign(jwtSecret);
+
+        cookies().set('session', sessionToken, { expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) });
+
+        return {
+            success: true,
+        }
+    } else {
+        return {
+            success: false,
+        }
+    }
+
 }

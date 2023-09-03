@@ -2,23 +2,20 @@
 
 import { type FC, type FormEvent, useState } from 'react';
 import {toast, Toaster} from 'sonner';
-import { adminPassword, adminUsername, toastDuration } from '../utils/constants';
+import { adminPassword, adminUsername, jwtSecret, toastDuration } from '../utils/constants';
 import { setCookie } from '../libs/cookies';
+import { sign } from 'jsonwebtoken';
+import { login } from './actions';
 
 const LoginPage: FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = (e: FormEvent) => {
-        e.preventDefault();
+    async function handleLogin(formData: FormData) {
+        const { success } = await login(formData);
 
-        if (username === adminUsername && password === adminPassword) {
-            setCookie("session", JSON.stringify({
-                username,
-                password
-            }), 30);
-
-            window.location.href = "/dashboard";
+        if (success) {
+            window.location.href = '/dashboard';
         } else {
             showToast();
             
@@ -41,7 +38,7 @@ const LoginPage: FC = () => {
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl">
                             Inicia sesión en tu cuenta
                         </h1>
-                        <form onSubmit={(e) => handleLogin(e)} className="space-y-4 md:space-y-6" autoComplete="off">
+                        <form action={handleLogin} className="space-y-4 md:space-y-6" autoComplete="off">
                             <div>
                                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Usuario</label>
                                 <input value={username} onChange={(e) => setUsername(e.target.value)} type="text" name="username" id="username" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nombre de usuario" required />

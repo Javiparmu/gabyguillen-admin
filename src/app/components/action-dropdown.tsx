@@ -1,14 +1,17 @@
 'use client';
 
+import { DeleteIcon, EditIcon, QRCodeIcon } from "./icons";
+
 interface ActionDropdownProps {
     isOpen: boolean;
     showActions: (id: string) => void;
     onEdit: () => void;
     onDelete: () => void;
+    onShowQR: () => void;
     id: string;
 }
 
-export const ActionDropdown = ({isOpen, showActions, onEdit, onDelete, id}: ActionDropdownProps) => {
+export const ActionDropdown = ({isOpen, showActions, onEdit, onDelete, onShowQR, id}: ActionDropdownProps) => {
     return (
         <>
             <button onClick={() => showActions(String(id))} id="dropdownMenuIconHorizontalButton" data-dropdown-toggle="dropdownDotsHorizontal" className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button"> 
@@ -20,13 +23,21 @@ export const ActionDropdown = ({isOpen, showActions, onEdit, onDelete, id}: Acti
                 <div id="dropdownDotsHorizontal" className="absolute z-100 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                     <ul className="py-2 w-full text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconHorizontalButton">
                         <li className="rounded-md">
-                            <button onClick={() => onEdit()} className="block text-start px-4 py-2 w-full hover:bg-gray-50 dark:hover:bg-gray-600 dark:hover:text-white">
+                            <button onClick={onEdit} className="flex flex-row items-center gap-2 text-start px-4 py-2 w-full hover:bg-gray-50 dark:hover:bg-gray-600 dark:hover:text-white">
+                                <EditIcon size={16} />
                                 Editar
                             </button>
                         </li>
                         <li className="rounded-md">
-                            <button onClick={() => onDelete()} className="block text-start px-4 py-2 w-full hover:bg-gray-50 dark:hover:bg-gray-600 dark:hover:text-white">
+                            <button onClick={onDelete} className="flex flex-row items-center gap-2 text-start px-4 py-2 w-full hover:bg-gray-50 dark:hover:bg-gray-600 dark:hover:text-white">
+                                <DeleteIcon size={16} color="#FF2323" />
                                 Eliminar
+                            </button>
+                        </li>
+                        <li className="rounded-md">
+                            <button onClick={onShowQR} className="flex flex-row items-center gap-2 text-start px-4 py-2 w-full hover:bg-gray-50 dark:hover:bg-gray-600 dark:hover:text-white">
+                                <QRCodeIcon size={16} />
+                                Mostrar QR
                             </button>
                         </li>
                     </ul>

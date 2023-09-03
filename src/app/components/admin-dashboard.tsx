@@ -18,6 +18,7 @@ const AdminDashboard = ({paintings}: AdminDashboardProps) => {
     const [createModalOpen, setCreateModalOpen] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [selectedPainting, setSelectedPainting] = useState<Partial<Painting>>();
+    const [showQr, setShowQr] = useState(false);
 
     const onCreate = () => {
         setCreateModalOpen(true)
@@ -57,6 +58,12 @@ const AdminDashboard = ({paintings}: AdminDashboardProps) => {
 
             setSelectedPainting(undefined);
         }
+    };
+
+    const onShowQR = (painting: Painting) => {
+        setSelectedPainting(painting);
+
+        setShowQr(true);
     };
 
     const showActions = (id: string) => {
@@ -102,37 +109,40 @@ const AdminDashboard = ({paintings}: AdminDashboardProps) => {
                         </thead>
                         <tbody>
                             {paintings?.map(painting => (
-                                <tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700" key={painting.id}>
-                                    <th scope="row" className="px-6 py-4">
-                                        <div className="flex items-center space-x-3">
-                                            {painting.image_url
-                                                ? <Image alt={painting.title ?? 'painting-image'} width={64} height={64} className="object-cover rounded-md" src={painting.image_url} />
-                                                : <div className="h-16 w-16 rounded-sm bg-gray-100" />
-                                            }
-                                        </div>
-                                    </th>
-                                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {painting.title}
-                                    </th>
-                                    <td className="px-6 py-4 max-w-[20ch] truncate whitespace-nowrap">
-                                        {painting.description}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {painting.collection}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {painting.price}€
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <ActionDropdown
-                                            isOpen={selectedPainting?.id === painting.id}
-                                            onEdit={onEdit}
-                                            onDelete={onDeleteClick}
-                                            showActions={showActions}
-                                            id={String(painting.id)}
-                                        />
-                                    </td>
-                                </tr>
+                                <>
+                                    <tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700" key={painting.id}>
+                                        <th scope="row" className="px-6 py-4">
+                                            <div className="flex items-center space-x-3">
+                                                {painting.image_url
+                                                    ? <Image alt={painting.title ?? 'painting-image'} width={64} height={64} className="w-16 h-16 object-cover rounded-md" src={painting.image_url} />
+                                                    : <div className="h-16 w-16 rounded-sm bg-gray-100" />
+                                                }
+                                            </div>
+                                        </th>
+                                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            {painting.title}
+                                        </th>
+                                        <td className="px-6 py-4 max-w-[20ch] truncate whitespace-nowrap">
+                                            {painting.description}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            {painting.collection}
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            {painting.price}€
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <ActionDropdown
+                                                isOpen={selectedPainting?.id === painting.id}
+                                                onEdit={onEdit}
+                                                onDelete={onDeleteClick}
+                                                showActions={showActions}
+                                                onShowQR={() => onShowQR(painting)}
+                                                id={String(painting.id)}
+                                            />
+                                        </td>
+                                    </tr>
+                                </>
                             ))}
                         </tbody>
                     </table>
@@ -147,6 +157,10 @@ const AdminDashboard = ({paintings}: AdminDashboardProps) => {
             }
             {deleteModalOpen && selectedPainting &&
                 <DeleteModal onDelete={onDelete} onClose={() => setDeleteModalOpen(false)} />
+            }
+            <div style={{ display: showQr ? 'block' : 'none' }} onClick={() => setShowQr(false)} className="fixed top-0 left-0 z-40 w-screen h-screen bg-black opacity-60" />
+            {selectedPainting != null && selectedPainting.qr != null && showQr &&
+                <Image width={250} height={250} src={selectedPainting.qr ?? ''} alt="qr" className="fixed top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] z-50 rounded-md"/>
             }
         </main>
     );

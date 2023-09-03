@@ -1,4 +1,5 @@
 import type { Painting } from '../../types';
+import { create, update } from '../actions';
 import { PaintingForm } from './painting-form';
 
 interface UpdateModalProps {
@@ -21,7 +22,7 @@ const UpdateModal = ({painting, onClose}: UpdateModalProps) => {
                         </button>
                         <div className="px-6 py-6 lg:px-8">
                             <h3 className="mb-4 text-xl font-medium text-gray-900 dark:text-white">Editar cuadro</h3>
-                            <PaintingForm painting={painting} action='update' close={onClose} />
+                            <PaintingForm painting={painting} action={update} close={onClose} />
                         </div>
                     </div>
                 </div>
