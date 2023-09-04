@@ -29,7 +29,7 @@ const AdminDashboard = ({paintings}: AdminDashboardProps) => {
             collection: '',
             price: 0,
             image_url: '',
-            qr: null
+            qr: ''
         };
 
         setSelectedPainting(painting);

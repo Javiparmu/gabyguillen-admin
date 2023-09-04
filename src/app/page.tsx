@@ -1,10 +1,8 @@
 'use client';
 
-import { type FC, type FormEvent, useState } from 'react';
+import { type FC, useState } from 'react';
 import {toast, Toaster} from 'sonner';
-import { adminPassword, adminUsername, jwtSecret, toastDuration } from '../utils/constants';
-import { setCookie } from '../libs/cookies';
-import { sign } from 'jsonwebtoken';
+import { toastDuration } from '../utils/constants';
 import { login } from './actions';
 
 const LoginPage: FC = () => {
