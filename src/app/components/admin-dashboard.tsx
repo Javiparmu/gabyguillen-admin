@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import type { Painting } from '../../types';
 import UpdateModal from '../components/update-modal';
 import CreateModal from '../components/create-modal';
@@ -60,19 +60,17 @@ const AdminDashboard = ({paintings}: AdminDashboardProps) => {
         }
     };
 
-    const onShowQR = (painting: Painting) => {
-        setSelectedPainting(painting);
-
+    const onShowQR = () => {
         setShowQr(true);
     };
 
-    const showActions = (id: string) => {
-        if (String(selectedPainting?.id) === id) {
+    const showActions = (id: number) => {
+        if (selectedPainting?.id === id) {
             setSelectedPainting(undefined);
         } else {
-            const painting = paintings.find(painting => String(painting.id) === id);
+            const painting = paintings.find(painting => painting.id === id);
 
-            if (painting) {
+            if (painting != null) {
                 setSelectedPainting(painting);
             }
         }
@@ -109,7 +107,7 @@ const AdminDashboard = ({paintings}: AdminDashboardProps) => {
                         </thead>
                         <tbody>
                             {paintings?.map(painting => (
-                                <>
+                                <Fragment key={painting.slug}>
                                     <tr className="bg-white border-b dark:bg-gray-900 dark:border-gray-700" key={painting.id}>
                                         <th scope="row" className="px-6 py-4">
                                             <div className="flex items-center space-x-3">
@@ -136,13 +134,12 @@ const AdminDashboard = ({paintings}: AdminDashboardProps) => {
                                                 isOpen={selectedPainting?.id === painting.id}
                                                 onEdit={onEdit}
                                                 onDelete={onDeleteClick}
-                                                showActions={showActions}
-                                                onShowQR={() => onShowQR(painting)}
-                                                id={String(painting.id)}
+                                                showActions={() => showActions(painting.id)}
+                                                onShowQR={onShowQR}
                                             />
                                         </td>
                                     </tr>
-                                </>
+                                </Fragment>
                             ))}
                         </tbody>
                     </table>
@@ -160,7 +157,7 @@ const AdminDashboard = ({paintings}: AdminDashboardProps) => {
             }
             <div style={{ display: showQr ? 'block' : 'none' }} onClick={() => setShowQr(false)} className="fixed top-0 left-0 z-40 w-screen h-screen bg-black opacity-60" />
             {selectedPainting != null && selectedPainting.qr != null && showQr &&
-                <Image width={250} height={250} src={selectedPainting.qr ?? ''} alt="qr" className="fixed top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] z-50 rounded-md"/>
+                <Image width={250} height={250} src={selectedPainting.qr} alt="qr" className="w-64 h-64 fixed top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] z-50 rounded-md"/>
             }
         </main>
     );

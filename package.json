@@ -15,7 +15,6 @@
     "eslint": "8.48.0",
     "eslint-config-next": "13.4.19",
     "jose": "^4.14.5",
-    "lodash": "^4.17.21",
     "next": "13.4.19",
     "postcss": "8.4.29",
     "qrcode": "^1.5.3",
@@ -27,8 +26,6 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.2",
-    "@types/lodash": "^4.14.197",
     "@types/node": "20.5.8",
     "@types/qrcode": "^1.5.2",
     "@types/react": "18.2.21",

@@ -18,7 +18,8 @@ export interface Database {
           image_url: string
           price: number | null
           qr: string | null
-          title: string
+          title: string,
+          slug: string
         }
         Insert: {
           collection?: string | null
@@ -28,7 +29,8 @@ export interface Database {
           image_url: string
           price?: number | null
           qr?: string | null
-          title?: string
+          title?: string,
+          slug?: string
         }
         Update: {
           collection?: string | null
@@ -38,7 +40,8 @@ export interface Database {
           image_url?: string
           price?: number | null
           qr?: string | null
-          title?: string
+          title?: string,
+          slug?: string
         }
         Relationships: []
       }
@@ -64,7 +67,8 @@ export interface Painting {
     description: string
     id: number
     image_url: string
-    price: number | null
-    qr: string | null
-    title: string
+    price: number
+    qr: string
+    title: string,
+    slug: string
 }

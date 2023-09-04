@@ -7,14 +7,14 @@ const options: QRCodeToDataURLOptions = {
   };
   
   export const getQRCode = async (value: string) => {
-    return toDataURL(value, options);;
+    return toDataURL(value, options);
   };
   
   export const getUrlFromTitle = (title: string) => {
-      return baseUrl + getSectionIdFromTitle(title);
+      return baseUrl + '/' + getSlugFromTitle(title);
   }
   
-  export const getSectionIdFromTitle = (title: string) => {
+  export const getSlugFromTitle = (title: string) => {
       return normalizeText(title.toLowerCase().replace(/ /g, "-"));
   }
   

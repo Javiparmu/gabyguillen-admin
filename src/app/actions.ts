@@ -1,6 +1,6 @@
 'use server';
 
-import { getQRCode, getSectionIdFromTitle, getUrlFromTitle } from "@/libs/qr";
+import { getQRCode, getSlugFromTitle, getUrlFromTitle } from "@/libs/qr";
 import { baseFileUrl, defaultParams, s3Client } from "@/libs/s3Client";
 import { Painting } from "@/types";
 import { adminPassword, adminUsername, baseUrl, jwtSecret } from "@/utils/constants";
@@ -12,10 +12,11 @@ import { SignJWT } from 'jose'
 const schema = z.object({
     title: z.string(),
     description: z.string(),
-    collection: z.string(),
+    collection: z.string().optional(),
     price: z.number(),
     image_url: z.string(),
     qr: z.string(),
+    slug: z.string(),
 });
 
 export async function create(formData: FormData) {
@@ -39,16 +40,23 @@ export async function create(formData: FormData) {
 
     const paintingUrl = getUrlFromTitle(title);
 
-    const base64Qr = await getQRCode(paintingUrl);
+    let base64Qr = await getQRCode(paintingUrl);
 
-    const qrFileName = getSectionIdFromTitle(title) + '.png';
+    const base64Prefix = "data:image/png;base64,";
+    if (base64Qr.startsWith(base64Prefix)) {
+        base64Qr = base64Qr.substring(base64Prefix.length);
+    }
+
+    const slug = getSlugFromTitle(title);
+
+    const qrFilename = slug + '.png';
 
     const qrFile = Buffer.from(base64Qr, 'base64');
 
     const qrParams = {
         ...defaultParams,
         Body: qrFile,
-        Key: qrFileName,
+        Key: qrFilename,
     };
 
     const qrCommand = new PutObjectCommand(qrParams);
@@ -61,10 +69,13 @@ export async function create(formData: FormData) {
         collection,
         price: Number(price),
         image_url: baseFileUrl + imageFile.name,
-        qr: baseFileUrl + qrFileName,
+        qr: baseFileUrl + qrFilename,
+        slug,
     };
 
     const createdPainting = schema.parse(painting);
+
+    console.log("createdPainting", createdPainting);
 
     await fetch(baseUrl + '/api/paintings', {
         method: 'POST',
