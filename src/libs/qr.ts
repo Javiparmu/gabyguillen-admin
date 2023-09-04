@@ -1,4 +1,4 @@
-import { baseUrl } from "@/utils/constants";
+import { mainUrl } from "@/utils/constants";
 import { toDataURL, type QRCodeToDataURLOptions } from "qrcode";
 
 const options: QRCodeToDataURLOptions = {
@@ -11,7 +11,7 @@ const options: QRCodeToDataURLOptions = {
   };
   
   export const getUrlFromTitle = (title: string) => {
-      return baseUrl + '/' + getSlugFromTitle(title);
+      return mainUrl + '/' + getSlugFromTitle(title);
   }
   
   export const getSlugFromTitle = (title: string) => {
