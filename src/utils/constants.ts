@@ -1,5 +1,3 @@
-import { Painting } from "@/types";
-
 export const baseUrl = process.env.BASE_URL;
 
 export const mainUrl = process.env.MAIN_URL;
