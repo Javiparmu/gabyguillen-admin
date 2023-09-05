@@ -1,5 +1,5 @@
 import type { Painting } from '../../types';
-import { create, update } from '../actions';
+import { create } from '../actions';
 import { PaintingForm } from './painting-form';
 
 interface CreateModalProps {

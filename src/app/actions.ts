@@ -75,8 +75,6 @@ export async function create(formData: FormData) {
 
     const createdPainting = schema.parse(painting);
 
-    console.log("createdPainting", createdPainting);
-
     await fetch(baseUrl + '/api/paintings', {
         method: 'POST',
         headers: {
