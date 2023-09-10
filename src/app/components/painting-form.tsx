@@ -51,7 +51,7 @@ export const PaintingForm: FC<PaintingFormProps> = ({painting, action, close}) =
                     <label className="block text-sm font-medium leading-6 text-gray-900">Imagen del cuadro</label>
                     <div className="mt-2 flex items-center gap-x-3">
                         {image !== ''
-                            ? <Image alt={painting.title ?? 'painting-image'} width={64} height={64} className="w-16 h-16 object-contain rounded-md" src={image} />
+                            ? <img alt={painting.title ?? 'painting-image'} className="w-16 h-16 object-contain rounded-md" src={image} />
                             : <div className="h-16 w-16 rounded-sm bg-gray-100" />
                         }
                         <input name="imageFile" accept="image/*" ref={imageInput} onChange={handleFileChange} type="file" id="image" className="hidden" />
