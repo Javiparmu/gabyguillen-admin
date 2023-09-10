@@ -147,7 +147,7 @@ const AdminDashboard = ({paintings}: AdminDashboardProps) => {
                                         <th scope="row" className="px-6 py-4">
                                             <div className="flex items-center space-x-3">
                                                 {painting.image_url
-                                                    ? <Image alt={painting.title ?? 'painting-image'} width={64} height={64} className="w-16 h-16 object-cover rounded-md" src={painting.image_url} />
+                                                    ? <img alt={painting.title ?? 'painting-image'} className="w-16 h-16 object-cover rounded-md" src={painting.image_url} />
                                                     : <div className="h-16 w-16 rounded-sm bg-gray-100" />
                                                 }
                                             </div>
