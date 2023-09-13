@@ -17,6 +17,7 @@ const schema = z.object({
     image_url: z.string(),
     qr: z.string(),
     slug: z.string(),
+    is_top: z.boolean(),
 });
 
 export async function create(formData: FormData) {
@@ -25,6 +26,7 @@ export async function create(formData: FormData) {
     const collection = formData.get('collection') as string;
     const price = formData.get('price') as string;
     const imageFile = formData.get('imageFile') as File;
+    const isTop = formData.get('is_top') === 'on' ? true : false;
 
     const fileBuffer = await imageFile.arrayBuffer();
 
@@ -71,6 +73,7 @@ export async function create(formData: FormData) {
         image_url: baseFileUrl + imageFile.name,
         qr: baseFileUrl + qrFilename,
         slug,
+        is_top: isTop,
     };
 
     const createdPainting = schema.parse(painting);
@@ -85,12 +88,13 @@ export async function create(formData: FormData) {
 };
 
 export async function update(formData: FormData) {
-    const painting = schema.parse(Object.fromEntries(formData));
+    const painting = Object.fromEntries(formData);
     const title = formData.get('title') as string;
     const description = formData.get('description') as string;
     const collection = formData.get('collection') as string;
     const price = formData.get('price') as string;
     const imageFile = formData.get('imageFile') as File;
+    const isTop = formData.get('is_top') === 'on' ? true : false;
 
     const fileBuffer = await imageFile.arrayBuffer();
 
@@ -105,13 +109,17 @@ export async function update(formData: FormData) {
     await s3Client.send(command);
 
     const updatedPainting: Partial<Painting> = {
-        ...painting,
+        id: Number(painting.id),
         title,
         description,
         collection,
         price: Number(price),
-        image_url: baseFileUrl + imageFile.name,
+        is_top: isTop,
     };
+
+    if (imageFile.name != 'undefined') {
+        updatedPainting.image_url = baseFileUrl + imageFile.name;
+    }
 
     await fetch(baseUrl + '/api/paintings', {
         method: 'PUT',

@@ -2,7 +2,6 @@
 
 import { useRef, type FC, useState, type ChangeEvent } from "react"
 import type { Painting } from "../../types";
-import Image from "next/image";
 import SubmitButton from "./submit-button";
 import { useRouter } from "next/navigation";
 
@@ -37,6 +36,8 @@ export const PaintingForm: FC<PaintingFormProps> = ({painting, action, close}) =
     };
 
     async function handleSubmit(formData: FormData) {
+        formData.append('id', painting.id?.toString() ?? '');
+
         await action(formData);
 
         close?.();
@@ -73,6 +74,25 @@ export const PaintingForm: FC<PaintingFormProps> = ({painting, action, close}) =
                 <div>
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio</label>
                     <input defaultValue={painting.price} type="text" name="price" id="price" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="500" required />
+                </div>
+                <div className="relative flex items-start">
+                    <div className="flex h-6 items-center">
+                        <input
+                            defaultChecked={painting.is_top ?? false}
+                            id="is_top"
+                            name="is_top"
+                            type="checkbox"
+                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                        />
+                    </div>
+                    <div className="ml-3 text-sm leading-6">
+                        <label htmlFor="comments" className="font-medium text-gray-900">
+                            Top
+                        </label>
+                        <p id="comments-description" className="text-gray-500">
+                            Mostrar el cuadro en la sección principal.
+                        </p>
+                    </div>
                 </div>
                 <SubmitButton />
             </form>

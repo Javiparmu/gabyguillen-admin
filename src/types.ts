@@ -19,7 +19,8 @@ export interface Database {
           price: number | null
           qr: string | null
           title: string,
-          slug: string
+          slug: string,
+          is_top: boolean
         }
         Insert: {
           collection?: string | null
@@ -30,7 +31,8 @@ export interface Database {
           price?: number | null
           qr?: string | null
           title?: string,
-          slug?: string
+          slug?: string,
+          is_top?: boolean
         }
         Update: {
           collection?: string | null
@@ -41,7 +43,8 @@ export interface Database {
           price?: number | null
           qr?: string | null
           title?: string,
-          slug?: string
+          slug?: string,
+          is_top?: boolean
         }
         Relationships: []
       }
@@ -71,4 +74,5 @@ export interface Painting {
     qr: string
     title: string,
     slug: string
+    is_top: boolean
 }
