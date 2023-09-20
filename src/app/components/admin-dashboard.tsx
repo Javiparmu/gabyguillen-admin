@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import type { Painting } from '../../types';
 import UpdateModal from '../components/update-modal';
 import CreateModal from '../components/create-modal';
@@ -18,7 +18,7 @@ interface AdminDashboardProps {
 const pageSize = 10;
 
 const AdminDashboard = ({paintings}: AdminDashboardProps) => {
-    const [filteredPaintings, setFilteredPaintings] = useState<Painting[]>([...paintings].slice(0, pageSize));
+    const [filteredPaintings, setFilteredPaintings] = useState<Painting[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [numberOfPages, setNumberOfPages] = useState(Math.ceil(paintings.length / pageSize));
     const [totalCount, setTotalCount] = useState(paintings.length);
@@ -28,6 +28,10 @@ const AdminDashboard = ({paintings}: AdminDashboardProps) => {
     const [selectedPainting, setSelectedPainting] = useState<Partial<Painting>>();
     const [search, setSearch] = useState('' as string);
     const [showQr, setShowQr] = useState(false);
+
+    useEffect(() => {
+        setFilteredPaintings([...paintings].slice(0, pageSize))
+    }, [paintings]);
 
     const onCreate = () => {
         setCreateModalOpen(true)

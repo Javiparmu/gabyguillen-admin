@@ -3,7 +3,6 @@
 import { useRef, type FC, useState, type ChangeEvent } from "react"
 import type { Painting } from "../../types";
 import SubmitButton from "./submit-button";
-import { useRouter } from "next/navigation";
 
 interface PaintingFormProps {
     painting: Partial<Painting>;
@@ -14,8 +13,6 @@ interface PaintingFormProps {
 export const PaintingForm: FC<PaintingFormProps> = ({painting, action, close}) => {
     const imageInput = useRef<HTMLInputElement>(null);
     const [image, setImage] = useState<string>(painting.image_url ?? '');
-
-    const router = useRouter();
 
     const handleChangeImage = () => {
         if (imageInput?.current != null) imageInput.current.click();
@@ -41,8 +38,6 @@ export const PaintingForm: FC<PaintingFormProps> = ({painting, action, close}) =
         await action(formData);
 
         close?.();
-
-        router.refresh();
     }
 
     return (

@@ -8,6 +8,7 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { z } from "zod";
 import { cookies } from 'next/headers'
 import { SignJWT } from 'jose'
+import { revalidateTag } from "next/cache";
 
 const schema = z.object({
     title: z.string(),
@@ -85,6 +86,8 @@ export async function create(formData: FormData) {
         },
         body: JSON.stringify(createdPainting),
     });
+
+    revalidateTag('paintings');
 };
 
 export async function update(formData: FormData) {
@@ -128,6 +131,8 @@ export async function update(formData: FormData) {
         },
         body: JSON.stringify(updatedPainting),
     });
+
+    revalidateTag('paintings');
 }
 
 export async function login(formData: FormData) {
