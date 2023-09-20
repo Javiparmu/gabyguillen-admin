@@ -35,6 +35,8 @@ export async function create(formData: FormData) {
         ...defaultParams,
         Body: Buffer.from(fileBuffer),
         Key: imageFile.name,
+        CacheControl: 'max-age=31536000',
+        MetadataDirective: 'REPLACE'
     };
     
     const command = new PutObjectCommand(params);
@@ -60,6 +62,8 @@ export async function create(formData: FormData) {
         ...defaultParams,
         Body: qrFile,
         Key: qrFilename,
+        CacheControl: 'max-age=31536000',
+        MetadataDirective: 'REPLACE'
     };
 
     const qrCommand = new PutObjectCommand(qrParams);
@@ -105,6 +109,8 @@ export async function update(formData: FormData) {
         ...defaultParams,
         Body: Buffer.from(fileBuffer),
         Key: imageFile.name,
+        CacheControl: 'max-age=31536000',
+        MetadataDirective: 'REPLACE'
     };
     
     const command = new PutObjectCommand(params);
